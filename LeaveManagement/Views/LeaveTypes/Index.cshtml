@@ -1,0 +1,72 @@
+@model IEnumerable<Leave.Core.Models.LeaveType>
+@{
+    ViewData["Title"] = "Leave Types";
+}
+
+<div class="page-header">
+    <h1><i class="bi bi-tags"></i> Leave Types</h1>
+    <a asp-action="Create" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Add Leave Type
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Max Days/Year</th>
+                        <th>Requires Approval</th>
+                        <th>Is Paid</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var leaveType in Model)
+                    {
+                        <tr>
+                            <td>@leaveType.LeaveTypeId</td>
+                            <td>@leaveType.Name</td>
+                            <td>@leaveType.Description</td>
+                            <td>@leaveType.MaxDaysPerYear</td>
+                            <td>
+                                @if (leaveType.RequiresApproval)
+                                {
+                                    <span class="badge badge-approved">Yes</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-cancelled">No</span>
+                                }
+                            </td>
+                            <td>
+                                @if (leaveType.IsPaid)
+                                {
+                                    <span class="badge badge-approved">Yes</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-rejected">No</span>
+                                }
+                            </td>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@leaveType.LeaveTypeId" class="btn btn-sm btn-warning">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@leaveType.LeaveTypeId" 
+                                   class="btn btn-sm btn-danger" 
+                                   onclick="return confirm('Delete this leave type?')">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

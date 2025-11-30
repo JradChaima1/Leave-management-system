@@ -1,0 +1,115 @@
+@model IEnumerable<Leave.Core.Models.LeaveRequest>
+@{
+    ViewData["Title"] = "Pending Approvals";
+}
+
+<div class="page-header">
+    <h1><i class="bi bi-check-circle"></i> Pending Approvals</h1>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        @if (!Model.Any())
+        {
+            <div class="text-center py-5">
+                <i class="bi bi-check-circle" style="font-size: 4rem; color: #10B981;"></i>
+                <p class="text-muted mt-3">No pending approvals</p>
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Employee</th>
+                            <th>Leave Type</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Days</th>
+                            <th>Reason</th>
+                            <th>Request Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var request in Model)
+                        {
+                            <tr>
+                                <td>@request.LeaveRequestId</td>
+                                <td>@request.Employee?.FirstName @request.Employee?.LastName</td>
+                                <td>@request.LeaveType?.Name</td>
+                                <td>@request.StartDate.ToString("MMM dd, yyyy")</td>
+                                <td>@request.EndDate.ToString("MMM dd, yyyy")</td>
+                                <td>@request.TotalDays</td>
+                                <td>@request.Reason</td>
+                                <td>@request.RequestDate.ToString("MMM dd, yyyy")</td>
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-success" 
+                                            onclick="approveRequest(@request.LeaveRequestId)">
+                                        <i class="bi bi-check"></i> Approve
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-danger" 
+                                            onclick="showRejectModal(@request.LeaveRequestId)">
+                                        <i class="bi bi-x"></i> Reject
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="modal fade" id="rejectModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Reject Leave Request</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="rejectForm" method="post" asp-action="Reject">
+                <div class="modal-body">
+                    <input type="hidden" id="rejectRequestId" name="id" />
+                    <div class="mb-3">
+                        <label class="form-label">Rejection Reason</label>
+                        <textarea name="reason" class="form-control" rows="4" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Reject Request</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function approveRequest(id) {
+            if (confirm('Approve this leave request?')) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '@Url.Action("Approve", "Approvals")';
+                
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'id';
+                input.value = id;
+                
+                form.appendChild(input);
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+
+        function showRejectModal(id) {
+            document.getElementById('rejectRequestId').value = id;
+            new bootstrap.Modal(document.getElementById('rejectModal')).show();
+        }
+    </script>
+}
