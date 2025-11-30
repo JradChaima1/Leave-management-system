@@ -1,0 +1,153 @@
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="page-header">
+    <h1><i class="bi bi-speedometer2"></i> Dashboard</h1>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="stats-card">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h3>@ViewBag.TotalEmployees</h3>
+                    <p>Total Employees</p>
+                </div>
+                <i class="bi bi-people"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="stats-card" style="background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h3>@ViewBag.PendingRequests</h3>
+                    <p>Pending Requests</p>
+                </div>
+                <i class="bi bi-clock-history"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="stats-card" style="background: linear-gradient(135deg, #10B981 0%, #059669 100%);">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h3>@ViewBag.ApprovedThisMonth</h3>
+                    <p>Approved This Month</p>
+                </div>
+                <i class="bi bi-check-circle"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="stats-card" style="background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h3>@ViewBag.RejectedThisMonth</h3>
+                    <p>Rejected This Month</p>
+                </div>
+                <i class="bi bi-x-circle"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <i class="bi bi-bar-chart"></i> Leave Requests by Status
+            </div>
+            <div class="card-body">
+                <canvas id="statusChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <i class="bi bi-pie-chart"></i> Leave Type Distribution
+            </div>
+            <div class="card-body">
+                <canvas id="typeChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <i class="bi bi-building"></i> Leave Usage by Department
+            </div>
+            <div class="card-body">
+                <canvas id="departmentChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const statusData = @Html.Raw(Json.Serialize(ViewBag.RequestsByStatus));
+        const departmentData = @Html.Raw(Json.Serialize(ViewBag.UsageByDepartment));
+        const typeData = @Html.Raw(Json.Serialize(ViewBag.LeaveTypeDistribution));
+
+        new Chart(document.getElementById('statusChart'), {
+            type: 'bar',
+            data: {
+                labels: Object.keys(statusData),
+                datasets: [{
+                    label: 'Requests',
+                    data: Object.values(statusData),
+                    backgroundColor: ['#7C3AED', '#F59E0B', '#10B981', '#EF4444']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+
+        new Chart(document.getElementById('typeChart'), {
+            type: 'doughnut',
+            data: {
+                labels: Object.keys(typeData),
+                datasets: [{
+                    data: Object.values(typeData),
+                    backgroundColor: ['#7C3AED', '#EC4899', '#F59E0B', '#10B981', '#3B82F6']
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+
+        new Chart(document.getElementById('departmentChart'), {
+            type: 'bar',
+            data: {
+                labels: Object.keys(departmentData),
+                datasets: [{
+                    label: 'Leave Requests',
+                    data: Object.values(departmentData),
+                    backgroundColor: '#7C3AED'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+    </script>
+}
