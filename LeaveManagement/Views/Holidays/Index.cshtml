@@ -1,0 +1,61 @@
+@model IEnumerable<Leave.Core.Models.Holiday>
+@{
+    ViewData["Title"] = "Holidays";
+}
+
+<div class="page-header">
+    <h1><i class="bi bi-calendar-event"></i> Holidays</h1>
+    <a asp-action="Create" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Add Holiday
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Date</th>
+                        <th>Is Recurring</th>
+                        <th>Description</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var holiday in Model.OrderBy(h => h.Date))
+                    {
+                        <tr>
+                            <td>@holiday.HolidayId</td>
+                            <td>@holiday.Name</td>
+                            <td>@holiday.Date.ToString("MMMM dd, yyyy")</td>
+                            <td>
+                                @if (holiday.IsRecurring)
+                                {
+                                    <span class="badge badge-approved">Yes</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-cancelled">No</span>
+                                }
+                            </td>
+                            <td>@holiday.Description</td>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@holiday.HolidayId" class="btn btn-sm btn-warning">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@holiday.HolidayId" 
+                                   class="btn btn-sm btn-danger" 
+                                   onclick="return confirm('Delete this holiday?')">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

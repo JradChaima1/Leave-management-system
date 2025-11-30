@@ -1,82 +1,141 @@
 using Leave.Core.Models;
 using Leave.Core.Interfaces;
+using Leave.Core.Exceptions;
+using Microsoft.Extensions.Logging;
 
 namespace Leave.Services.Services
 {
     public class EmployeeService : IEmployeeService
     {
         private readonly IEmployeeRepository _employeeRepository;
+        private readonly ILogger<EmployeeService> _logger;
 
-        public EmployeeService(IEmployeeRepository employeeRepository)
+        public EmployeeService(IEmployeeRepository employeeRepository, ILogger<EmployeeService> logger)
         {
             _employeeRepository = employeeRepository;
+            _logger = logger;
         }
 
         public async Task<IEnumerable<Employee>> GetAllEmployeesAsync()
         {
-            return await _employeeRepository.GetAllAsync();
+            _logger.LogInformation("Fetching all employees");
+            var employees = await _employeeRepository.GetAllAsync();
+            _logger.LogInformation("Retrieved {Count} employees", employees.Count());
+            return employees;
         }
 
         public async Task<Employee> GetEmployeeByIdAsync(int id)
         {
+            _logger.LogInformation("Fetching employee with ID: {EmployeeId}", id);
             var employee = await _employeeRepository.GetByIdAsync(id);
+            
             if (employee == null)
-                throw new Exception($"Employee with ID {id} not found");
+            {
+                _logger.LogWarning("Employee with ID {EmployeeId} not found", id);
+                throw new NotFoundException($"Employee with ID {id} not found");
+            }
+            
             return employee;
         }
 
         public async Task<Employee> CreateEmployeeAsync(Employee employee)
         {
+            _logger.LogInformation("Creating employee: {Email}", employee.Email);
             
             if (string.IsNullOrEmpty(employee.FirstName))
-                throw new Exception("First name is required");
+            {
+                _logger.LogWarning("Employee creation failed: First name is required");
+                throw new ValidationException("First name is required");
+            }
             if (string.IsNullOrEmpty(employee.LastName))
-                throw new Exception("Last name is required");
+            {
+                _logger.LogWarning("Employee creation failed: Last name is required");
+                throw new ValidationException("Last name is required");
+            }
             if (string.IsNullOrEmpty(employee.Email))
-                throw new Exception("Email is required");
+            {
+                _logger.LogWarning("Employee creation failed: Email is required");
+                throw new ValidationException("Email is required");
+            }
 
-           
             employee.IsActive = true;
             employee.HireDate = employee.HireDate == default ? DateTime.Now : employee.HireDate;
             employee.AnnualLeaveBalance = 20;
             employee.SickLeaveBalance = 10;
 
-            return await _employeeRepository.AddAsync(employee);
+            var result = await _employeeRepository.AddAsync(employee);
+            _logger.LogInformation("Employee created successfully: {EmployeeId}, {Email}", result.EmployeeId, result.Email);
+            return result;
         }
 
         public async Task UpdateEmployeeAsync(Employee employee)
         {
+            _logger.LogInformation("Updating employee: {EmployeeId}", employee.EmployeeId);
+            
             var existing = await _employeeRepository.GetByIdAsync(employee.EmployeeId);
             if (existing == null)
-                throw new Exception($"Employee with ID {employee.EmployeeId} not found");
+            {
+                _logger.LogWarning("Update failed: Employee with ID {EmployeeId} not found", employee.EmployeeId);
+                throw new NotFoundException($"Employee with ID {employee.EmployeeId} not found");
+            }
 
-            await _employeeRepository.UpdateAsync(employee);
+            existing.FirstName = employee.FirstName;
+            existing.LastName = employee.LastName;
+            existing.Email = employee.Email;
+            existing.PhoneNumber = employee.PhoneNumber;
+            existing.Department = employee.Department;
+            existing.Position = employee.Position;
+            existing.HireDate = employee.HireDate;
+            existing.IsActive = employee.IsActive;
+
+            await _employeeRepository.UpdateAsync(existing);
+            _logger.LogInformation("Employee updated successfully: {EmployeeId}", employee.EmployeeId);
         }
 
         public async Task DeleteEmployeeAsync(int id)
         {
+            _logger.LogInformation("Deleting employee: {EmployeeId}", id);
+            
             var employee = await _employeeRepository.GetByIdAsync(id);
             if (employee == null)
-                throw new Exception($"Employee with ID {id} not found");
+            {
+                _logger.LogWarning("Delete failed: Employee with ID {EmployeeId} not found", id);
+                throw new NotFoundException($"Employee with ID {id} not found");
+            }
 
-          
             employee.IsActive = false;
             await _employeeRepository.UpdateAsync(employee);
+            _logger.LogInformation("Employee soft-deleted successfully: {EmployeeId}", id);
         }
 
         public async Task<IEnumerable<Employee>> GetEmployeesByManagerAsync(int managerId)
         {
-            return await _employeeRepository.GetEmployeesByManagerAsync(managerId);
+            _logger.LogInformation("Fetching employees for manager: {ManagerId}", managerId);
+            var employees = await _employeeRepository.GetEmployeesByManagerAsync(managerId);
+            _logger.LogInformation("Retrieved {Count} employees for manager {ManagerId}", employees.Count(), managerId);
+            return employees;
         }
 
         public async Task<IEnumerable<Employee>> GetEmployeesByDepartmentAsync(string department)
         {
-            return await _employeeRepository.GetEmployeesByDepartmentAsync(department);
+            _logger.LogInformation("Fetching employees for department: {Department}", department);
+            var employees = await _employeeRepository.GetEmployeesByDepartmentAsync(department);
+            _logger.LogInformation("Retrieved {Count} employees for department {Department}", employees.Count(), department);
+            return employees;
         }
 
         public async Task<Employee> GetEmployeeWithDetailsAsync(int employeeId)
         {
-            return await _employeeRepository.GetEmployeeWithLeaveRequestsAsync(employeeId);
+            _logger.LogInformation("Fetching employee details: {EmployeeId}", employeeId);
+            var employee = await _employeeRepository.GetEmployeeWithLeaveRequestsAsync(employeeId);
+            
+            if (employee == null)
+            {
+                _logger.LogWarning("Employee details not found: {EmployeeId}", employeeId);
+                throw new NotFoundException($"Employee with ID {employeeId} not found");
+            }
+            
+            return employee;
         }
     }
 }

@@ -4,8 +4,15 @@ using Leave.Data.Repositories;
 using Leave.Services.Services;
 using Leave.Core.Interfaces;
 using Leave.Core.Models;
+using Serilog;
+
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .WriteTo.File("logs/leave-management-.txt", rollingInterval: RollingInterval.Day)
+    .CreateLogger();
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.UseSerilog();
 
 builder.Services.AddControllersWithViews();
 
