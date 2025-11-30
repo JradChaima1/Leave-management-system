@@ -209,7 +209,6 @@ C:\Users\hp\Documents\Projects\Leave Management system\LeaveManagement\obj\Debug
 C:\Users\hp\Documents\Projects\Leave Management system\LeaveManagement\obj\Debug\net10.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
 C:\Users\hp\Documents\Projects\Leave Management system\LeaveManagement\obj\Debug\net10.0\scopedcss\bundle\LeaveManagement.styles.css
 C:\Users\hp\Documents\Projects\Leave Management system\LeaveManagement\obj\Debug\net10.0\scopedcss\projectbundle\LeaveManagement.bundle.scp.css
-C:\Users\hp\Documents\Projects\Leave Management system\LeaveManagement\obj\Debug\net10.0\compressed\i8n484k3as-{0}-b9sayid5wm-b9sayid5wm.gz
 C:\Users\hp\Documents\Projects\Leave Management system\LeaveManagement\obj\Debug\net10.0\compressed\5fmu4jaecr-{0}-61n19gt1b8-61n19gt1b8.gz
 C:\Users\hp\Documents\Projects\Leave Management system\LeaveManagement\obj\Debug\net10.0\compressed\28j0t5uc31-{0}-xtxxf3hu2r-xtxxf3hu2r.gz
 C:\Users\hp\Documents\Projects\Leave Management system\LeaveManagement\obj\Debug\net10.0\compressed\b9px3fm6td-{0}-bqjiyaj88i-bqjiyaj88i.gz
@@ -284,3 +283,4 @@ C:\Users\hp\Documents\Projects\Leave Management system\LeaveManagement\obj\Debug
 C:\Users\hp\Documents\Projects\Leave Management system\LeaveManagement\obj\Debug\net10.0\LeaveManagement.pdb
 C:\Users\hp\Documents\Projects\Leave Management system\LeaveManagement\obj\Debug\net10.0\LeaveManagement.genruntimeconfig.cache
 C:\Users\hp\Documents\Projects\Leave Management system\LeaveManagement\obj\Debug\net10.0\ref\LeaveManagement.dll
+C:\Users\hp\Documents\Projects\Leave Management system\LeaveManagement\obj\Debug\net10.0\compressed\i8n484k3as-{0}-o5rzrwtmi5-o5rzrwtmi5.gz

@@ -1,0 +1,84 @@
+@model IEnumerable<Leave.Core.Models.LeaveRequest>
+@{
+    ViewData["Title"] = "My Leave Requests";
+}
+
+<div class="page-header">
+    <h1><i class="bi bi-file-earmark-text"></i> My Leave Requests</h1>
+    <a asp-action="Create" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> New Request
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        @if (!Model.Any())
+        {
+            <div class="text-center py-5">
+                <i class="bi bi-inbox" style="font-size: 4rem; color: #ccc;"></i>
+                <p class="text-muted mt-3">No leave requests found</p>
+                <a asp-action="Create" class="btn btn-primary">Submit Your First Request</a>
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Leave Type</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Days</th>
+                            <th>Status</th>
+                            <th>Request Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var request in Model)
+                        {
+                            <tr>
+                                <td>@request.LeaveRequestId</td>
+                                <td>@request.LeaveType?.Name</td>
+                                <td>@request.StartDate.ToString("MMM dd, yyyy")</td>
+                                <td>@request.EndDate.ToString("MMM dd, yyyy")</td>
+                                <td>@request.TotalDays</td>
+                                <td>
+                                    @if (request.Status == "Pending")
+                                    {
+                                        <span class="badge badge-pending">Pending</span>
+                                    }
+                                    else if (request.Status == "Approved")
+                                    {
+                                        <span class="badge badge-approved">Approved</span>
+                                    }
+                                    else if (request.Status == "Rejected")
+                                    {
+                                        <span class="badge badge-rejected">Rejected</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-cancelled">Cancelled</span>
+                                    }
+                                </td>
+                                <td>@request.RequestDate.ToString("MMM dd, yyyy")</td>
+                                <td>
+                                    @if (request.Status == "Pending")
+                                    {
+                                        <a asp-action="Cancel" asp-route-id="@request.LeaveRequestId" 
+                                           class="btn btn-sm btn-danger" 
+                                           onclick="return confirm('Cancel this request?')">
+                                            <i class="bi bi-x-circle"></i> Cancel
+                                        </a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>

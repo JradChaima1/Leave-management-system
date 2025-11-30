@@ -33,6 +33,13 @@ builder.Services.AddSession(options =>
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<LeaveContext>();
+    context.Database.Migrate();
+    DataSeeder.SeedData(context);
+}
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
