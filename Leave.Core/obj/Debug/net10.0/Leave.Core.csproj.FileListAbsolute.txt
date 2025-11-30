@@ -1,0 +1,12 @@
+C:\Users\hp\Documents\Projects\Leave Management system\Leave.Core\bin\Debug\net10.0\Leave.Core.deps.json
+C:\Users\hp\Documents\Projects\Leave Management system\Leave.Core\bin\Debug\net10.0\Leave.Core.dll
+C:\Users\hp\Documents\Projects\Leave Management system\Leave.Core\bin\Debug\net10.0\Leave.Core.pdb
+C:\Users\hp\Documents\Projects\Leave Management system\Leave.Core\obj\Debug\net10.0\Leave.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\hp\Documents\Projects\Leave Management system\Leave.Core\obj\Debug\net10.0\Leave.Core.AssemblyInfoInputs.cache
+C:\Users\hp\Documents\Projects\Leave Management system\Leave.Core\obj\Debug\net10.0\Leave.Core.AssemblyInfo.cs
+C:\Users\hp\Documents\Projects\Leave Management system\Leave.Core\obj\Debug\net10.0\Leave.Core.csproj.CoreCompileInputs.cache
+C:\Users\hp\Documents\Projects\Leave Management system\Leave.Core\obj\Debug\net10.0\Leave.Core.sourcelink.json
+C:\Users\hp\Documents\Projects\Leave Management system\Leave.Core\obj\Debug\net10.0\Leave.Core.dll
+C:\Users\hp\Documents\Projects\Leave Management system\Leave.Core\obj\Debug\net10.0\refint\Leave.Core.dll
+C:\Users\hp\Documents\Projects\Leave Management system\Leave.Core\obj\Debug\net10.0\Leave.Core.pdb
+C:\Users\hp\Documents\Projects\Leave Management system\Leave.Core\obj\Debug\net10.0\ref\Leave.Core.dll
