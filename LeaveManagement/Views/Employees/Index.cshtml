@@ -21,19 +21,43 @@
                         <th>Email</th>
                         <th>Department</th>
                         <th>Position</th>
+                        <th>Role</th>
                         <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
+                    @{
+                        var users = ViewBag.Users as IEnumerable<Leave.Core.Models.User>;
+                    }
                     @foreach (var employee in Model)
                     {
+                        var user = users?.FirstOrDefault(u => u.EmployeeId == employee.EmployeeId);
+                        var roleName = user?.Role?.Name ?? "N/A";
                         <tr>
                             <td>@employee.EmployeeId</td>
                             <td>@employee.FirstName @employee.LastName</td>
                             <td>@employee.Email</td>
                             <td>@employee.Department</td>
                             <td>@employee.Position</td>
+                            <td>
+                                @if (roleName == "Admin")
+                                {
+                                    <span class="badge bg-danger">@roleName</span>
+                                }
+                                else if (roleName == "Manager")
+                                {
+                                    <span class="badge bg-warning">@roleName</span>
+                                }
+                                else if (roleName == "Employee")
+                                {
+                                    <span class="badge bg-info">@roleName</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">@roleName</span>
+                                }
+                            </td>
                             <td>
                                 @if (employee.IsActive)
                                 {

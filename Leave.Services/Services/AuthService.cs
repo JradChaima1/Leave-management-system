@@ -1,6 +1,8 @@
 using Leave.Core.Models;
 using Leave.Core.Interfaces;
 using Leave.Core.Exceptions;
+using Leave.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Leave.Services.Services
@@ -8,11 +10,13 @@ namespace Leave.Services.Services
     public class AuthService : IAuthService
     {
         private readonly IRepository<User> _userRepository;
+        private readonly LeaveContext _context;
         private readonly ILogger<AuthService> _logger;
 
-        public AuthService(IRepository<User> userRepository, ILogger<AuthService> logger)
+        public AuthService(IRepository<User> userRepository, LeaveContext context, ILogger<AuthService> logger)
         {
             _userRepository = userRepository;
+            _context = context;
             _logger = logger;
         }
 
@@ -68,6 +72,12 @@ namespace Leave.Services.Services
         {
             _logger.LogInformation("Fetching user with ID: {UserId}", userId);
             return await _userRepository.GetByIdAsync(userId);
+        }
+
+        public async Task<IEnumerable<User>> GetAllUsersAsync()
+        {
+            _logger.LogInformation("Fetching all users");
+            return await _context.Users.Include(u => u.Role).ToListAsync();
         }
 
         public async Task UpdateUserAsync(User user)

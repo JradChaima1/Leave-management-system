@@ -189,9 +189,21 @@ namespace Leave.Services.Services
         public async Task<IEnumerable<LeaveRequest>> GetPendingRequestsForManagerAsync(int managerId)
         {
             _logger.LogInformation("Fetching pending requests for manager {ManagerId}", managerId);
-            var requests = await _leaveRequestRepository.GetPendingRequestsByManagerAsync(managerId);
-            _logger.LogInformation("Retrieved {Count} pending requests for manager {ManagerId}", requests.Count(), managerId);
-            return requests;
+            
+            var manager = await _employeeRepository.GetByIdAsync(managerId);
+            if (manager == null)
+            {
+                _logger.LogWarning("Manager {ManagerId} not found", managerId);
+                return new List<LeaveRequest>();
+            }
+            
+            var allRequests = await _leaveRequestRepository.GetRequestsByStatusAsync("Pending");
+            var departmentRequests = allRequests.Where(r => r.Employee != null && r.Employee.Department == manager.Department).ToList();
+            
+            _logger.LogInformation("Retrieved {Count} pending requests for manager {ManagerId} in department {Department}", 
+                departmentRequests.Count, managerId, manager.Department);
+            
+            return departmentRequests;
         }
 
         public async Task<bool> ValidateLeaveRequestAsync(LeaveRequest request)

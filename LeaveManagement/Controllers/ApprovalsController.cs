@@ -4,7 +4,7 @@ using LeaveManagement.Filters;
 
 namespace LeaveManagement.Controllers
 {
-    [AuthorizeSession("Admin", "Manager")]
+    [AuthorizeSession("Manager")]
     public class ApprovalsController : Controller
     {
         private readonly ILeaveRequestService _leaveRequestService;

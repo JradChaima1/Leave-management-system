@@ -48,7 +48,12 @@ namespace Leave.Data
                 new Employee { FirstName = "Jane", LastName = "Manager", Email = "manager@company.com", PhoneNumber = "1234567891", Department = "IT", Position = "IT Manager", HireDate = new DateTime(2020, 2, 1), ManagerId = null, AnnualLeaveBalance = 20, SickLeaveBalance = 10, IsActive = true },
                 new Employee { FirstName = "Bob", LastName = "Smith", Email = "bob@company.com", PhoneNumber = "1234567892", Department = "IT", Position = "Developer", HireDate = new DateTime(2021, 3, 1), ManagerId = null, AnnualLeaveBalance = 20, SickLeaveBalance = 10, IsActive = true },
                 new Employee { FirstName = "Alice", LastName = "Johnson", Email = "alice@company.com", PhoneNumber = "1234567893", Department = "HR", Position = "HR Manager", HireDate = new DateTime(2020, 4, 1), ManagerId = null, AnnualLeaveBalance = 20, SickLeaveBalance = 10, IsActive = true },
-                new Employee { FirstName = "Charlie", LastName = "Brown", Email = "charlie@company.com", PhoneNumber = "1234567894", Department = "Finance", Position = "Accountant", HireDate = new DateTime(2021, 5, 1), ManagerId = null, AnnualLeaveBalance = 20, SickLeaveBalance = 10, IsActive = true }
+                new Employee { FirstName = "Charlie", LastName = "Brown", Email = "charlie@company.com", PhoneNumber = "1234567894", Department = "Finance", Position = "Accountant", HireDate = new DateTime(2021, 5, 1), ManagerId = null, AnnualLeaveBalance = 20, SickLeaveBalance = 10, IsActive = true },
+                new Employee { FirstName = "David", LastName = "Wilson", Email = "david@company.com", PhoneNumber = "1234567895", Department = "IT", Position = "Senior Developer", HireDate = new DateTime(2021, 6, 1), ManagerId = null, AnnualLeaveBalance = 20, SickLeaveBalance = 10, IsActive = true },
+                new Employee { FirstName = "Emma", LastName = "Davis", Email = "emma@company.com", PhoneNumber = "1234567896", Department = "HR", Position = "HR Specialist", HireDate = new DateTime(2022, 1, 1), ManagerId = null, AnnualLeaveBalance = 20, SickLeaveBalance = 10, IsActive = true },
+                new Employee { FirstName = "Frank", LastName = "Miller", Email = "frank@company.com", PhoneNumber = "1234567897", Department = "Finance", Position = "Finance Manager", HireDate = new DateTime(2020, 3, 1), ManagerId = null, AnnualLeaveBalance = 20, SickLeaveBalance = 10, IsActive = true },
+                new Employee { FirstName = "Grace", LastName = "Taylor", Email = "grace@company.com", PhoneNumber = "1234567898", Department = "Sales", Position = "Sales Manager", HireDate = new DateTime(2020, 5, 1), ManagerId = null, AnnualLeaveBalance = 20, SickLeaveBalance = 10, IsActive = true },
+                new Employee { FirstName = "Henry", LastName = "Anderson", Email = "henry@company.com", PhoneNumber = "1234567899", Department = "Sales", Position = "Sales Representative", HireDate = new DateTime(2022, 2, 1), ManagerId = null, AnnualLeaveBalance = 20, SickLeaveBalance = 10, IsActive = true }
             };
             context.Employees.AddRange(employees);
             context.SaveChanges();
@@ -56,7 +61,12 @@ namespace Leave.Data
             employees[1].ManagerId = employees[0].EmployeeId;
             employees[2].ManagerId = employees[1].EmployeeId;
             employees[3].ManagerId = employees[0].EmployeeId;
-            employees[4].ManagerId = employees[0].EmployeeId;
+            employees[4].ManagerId = employees[7].EmployeeId;
+            employees[5].ManagerId = employees[1].EmployeeId;
+            employees[6].ManagerId = employees[3].EmployeeId;
+            employees[7].ManagerId = employees[0].EmployeeId;
+            employees[8].ManagerId = employees[0].EmployeeId;
+            employees[9].ManagerId = employees[8].EmployeeId;
             context.SaveChanges();
 
             string passwordHash = HashPassword("password");
@@ -65,7 +75,14 @@ namespace Leave.Data
             {
                 new User { Username = "admin", PasswordHash = passwordHash, Email = "admin@company.com", RoleId = roles[0].RoleId, EmployeeId = employees[0].EmployeeId, IsActive = true, CreatedDate = DateTime.Now },
                 new User { Username = "manager", PasswordHash = passwordHash, Email = "manager@company.com", RoleId = roles[1].RoleId, EmployeeId = employees[1].EmployeeId, IsActive = true, CreatedDate = DateTime.Now },
-                new User { Username = "employee", PasswordHash = passwordHash, Email = "bob@company.com", RoleId = roles[2].RoleId, EmployeeId = employees[2].EmployeeId, IsActive = true, CreatedDate = DateTime.Now }
+                new User { Username = "employee", PasswordHash = passwordHash, Email = "bob@company.com", RoleId = roles[2].RoleId, EmployeeId = employees[2].EmployeeId, IsActive = true, CreatedDate = DateTime.Now },
+                new User { Username = "alice", PasswordHash = passwordHash, Email = "alice@company.com", RoleId = roles[1].RoleId, EmployeeId = employees[3].EmployeeId, IsActive = true, CreatedDate = DateTime.Now },
+                new User { Username = "charlie", PasswordHash = passwordHash, Email = "charlie@company.com", RoleId = roles[2].RoleId, EmployeeId = employees[4].EmployeeId, IsActive = true, CreatedDate = DateTime.Now },
+                new User { Username = "david", PasswordHash = passwordHash, Email = "david@company.com", RoleId = roles[2].RoleId, EmployeeId = employees[5].EmployeeId, IsActive = true, CreatedDate = DateTime.Now },
+                new User { Username = "emma", PasswordHash = passwordHash, Email = "emma@company.com", RoleId = roles[2].RoleId, EmployeeId = employees[6].EmployeeId, IsActive = true, CreatedDate = DateTime.Now },
+                new User { Username = "frank", PasswordHash = passwordHash, Email = "frank@company.com", RoleId = roles[1].RoleId, EmployeeId = employees[7].EmployeeId, IsActive = true, CreatedDate = DateTime.Now },
+                new User { Username = "grace", PasswordHash = passwordHash, Email = "grace@company.com", RoleId = roles[1].RoleId, EmployeeId = employees[8].EmployeeId, IsActive = true, CreatedDate = DateTime.Now },
+                new User { Username = "henry", PasswordHash = passwordHash, Email = "henry@company.com", RoleId = roles[2].RoleId, EmployeeId = employees[9].EmployeeId, IsActive = true, CreatedDate = DateTime.Now }
             };
             context.Users.AddRange(users);
             context.SaveChanges();

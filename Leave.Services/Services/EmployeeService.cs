@@ -8,11 +8,19 @@ namespace Leave.Services.Services
     public class EmployeeService : IEmployeeService
     {
         private readonly IEmployeeRepository _employeeRepository;
+        private readonly IRepository<LeaveType> _leaveTypeRepository;
+        private readonly IRepository<LeaveBalance> _leaveBalanceRepository;
         private readonly ILogger<EmployeeService> _logger;
 
-        public EmployeeService(IEmployeeRepository employeeRepository, ILogger<EmployeeService> logger)
+        public EmployeeService(
+            IEmployeeRepository employeeRepository, 
+            IRepository<LeaveType> leaveTypeRepository,
+            IRepository<LeaveBalance> leaveBalanceRepository,
+            ILogger<EmployeeService> logger)
         {
             _employeeRepository = employeeRepository;
+            _leaveTypeRepository = leaveTypeRepository;
+            _leaveBalanceRepository = leaveBalanceRepository;
             _logger = logger;
         }
 
@@ -65,6 +73,27 @@ namespace Leave.Services.Services
 
             var result = await _employeeRepository.AddAsync(employee);
             _logger.LogInformation("Employee created successfully: {EmployeeId}, {Email}", result.EmployeeId, result.Email);
+            
+           
+            var leaveTypes = await _leaveTypeRepository.GetAllAsync();
+            var currentYear = DateTime.Now.Year;
+            
+            foreach (var leaveType in leaveTypes)
+            {
+                var leaveBalance = new LeaveBalance
+                {
+                    EmployeeId = result.EmployeeId,
+                    LeaveTypeId = leaveType.LeaveTypeId,
+                    Year = currentYear,
+                    TotalDays = leaveType.MaxDaysPerYear,
+                    UsedDays = 0,
+                    RemainingDays = leaveType.MaxDaysPerYear
+                };
+                await _leaveBalanceRepository.AddAsync(leaveBalance);
+            }
+            
+            _logger.LogInformation("Leave balances created for employee {EmployeeId}", result.EmployeeId);
+            
             return result;
         }
 

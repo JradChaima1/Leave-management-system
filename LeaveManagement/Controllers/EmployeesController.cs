@@ -11,16 +11,35 @@ namespace LeaveManagement.Controllers
     {
         private readonly IEmployeeService _employeeService;
         private readonly IDepartmentService _departmentService;
+        private readonly IAuthService _authService;
 
-        public EmployeesController(IEmployeeService employeeService, IDepartmentService departmentService)
+        public EmployeesController(IEmployeeService employeeService, IDepartmentService departmentService, IAuthService authService)
         {
             _employeeService = employeeService;
             _departmentService = departmentService;
+            _authService = authService;
         }
 
         public async Task<IActionResult> Index()
         {
-            var employees = await _employeeService.GetAllEmployeesAsync();
+            var roleId = HttpContext.Session.GetInt32("RoleId");
+            var employeeId = HttpContext.Session.GetInt32("EmployeeId");
+            
+            IEnumerable<Employee> employees;
+            
+            if (roleId == 2 && employeeId.HasValue)
+            {
+                var manager = await _employeeService.GetEmployeeByIdAsync(employeeId.Value);
+                employees = await _employeeService.GetEmployeesByDepartmentAsync(manager.Department);
+            }
+            else
+            {
+                employees = await _employeeService.GetAllEmployeesAsync();
+            }
+            
+            var users = await _authService.GetAllUsersAsync();
+            ViewBag.Users = users;
+            
             return View(employees);
         }
 
@@ -30,6 +49,21 @@ namespace LeaveManagement.Controllers
             try
             {
                 var employee = await _employeeService.GetEmployeeWithDetailsAsync(id);
+                
+                // If Manager, verify the employee is in their department
+                var roleId = HttpContext.Session.GetInt32("RoleId");
+                var employeeId = HttpContext.Session.GetInt32("EmployeeId");
+                
+                if (roleId == 2 && employeeId.HasValue)
+                {
+                    var manager = await _employeeService.GetEmployeeByIdAsync(employeeId.Value);
+                    if (employee.Department != manager.Department)
+                    {
+                        TempData["Error"] = "You can only view employees from your department";
+                        return RedirectToAction("Index");
+                    }
+                }
+                
                 return View(employee);
             }
             catch (Exception ex)
@@ -50,12 +84,25 @@ namespace LeaveManagement.Controllers
 
         [HttpPost]
         [AuthorizeSession("Admin")]
-        public async Task<IActionResult> Create(Employee employee)
+        public async Task<IActionResult> Create(Employee employee, int RoleId, string username, string password)
         {
             try
             {
-                await _employeeService.CreateEmployeeAsync(employee);
-                TempData["Success"] = "Employee created successfully";
+                var createdEmployee = await _employeeService.CreateEmployeeAsync(employee);
+                
+                var user = new User
+                {
+                    Username = username ?? employee.Email.Split('@')[0],
+                    Email = employee.Email,
+                    RoleId = RoleId,
+                    EmployeeId = createdEmployee.EmployeeId,
+                    IsActive = true,
+                    CreatedDate = DateTime.Now
+                };
+                
+                await _authService.RegisterAsync(user, password ?? "password");
+                
+                TempData["Success"] = "Employee and user account created successfully";
                 return RedirectToAction("Index");
             }
             catch (Exception ex)
