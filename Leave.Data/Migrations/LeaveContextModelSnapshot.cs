@@ -202,7 +202,6 @@ namespace Leave.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("AttachmentPath")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
@@ -221,7 +220,6 @@ namespace Leave.Data.Migrations
                         .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("RejectionReason")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Leave.Core.Interfaces;
 using Leave.Core.Models;
 using LeaveManagement.Filters;
@@ -9,10 +10,12 @@ namespace LeaveManagement.Controllers
     public class EmployeesController : Controller
     {
         private readonly IEmployeeService _employeeService;
+        private readonly IDepartmentService _departmentService;
 
-        public EmployeesController(IEmployeeService employeeService)
+        public EmployeesController(IEmployeeService employeeService, IDepartmentService departmentService)
         {
             _employeeService = employeeService;
+            _departmentService = departmentService;
         }
 
         public async Task<IActionResult> Index()
@@ -21,6 +24,7 @@ namespace LeaveManagement.Controllers
             return View(employees);
         }
 
+        [AuthorizeSession("Admin", "Manager")]
         public async Task<IActionResult> Details(int id)
         {
             try
@@ -37,8 +41,10 @@ namespace LeaveManagement.Controllers
 
         [HttpGet]
         [AuthorizeSession("Admin")]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            var departments = await _departmentService.GetAllDepartmentsAsync();
+            ViewBag.Departments = new SelectList(departments, "Name", "Name");
             return View();
         }
 
@@ -54,6 +60,8 @@ namespace LeaveManagement.Controllers
             }
             catch (Exception ex)
             {
+                var departments = await _departmentService.GetAllDepartmentsAsync();
+                ViewBag.Departments = new SelectList(departments, "Name", "Name");
                 ViewBag.Error = ex.Message;
                 return View(employee);
             }
@@ -66,6 +74,8 @@ namespace LeaveManagement.Controllers
             try
             {
                 var employee = await _employeeService.GetEmployeeByIdAsync(id);
+                var departments = await _departmentService.GetAllDepartmentsAsync();
+                ViewBag.Departments = new SelectList(departments, "Name", "Name", employee.Department);
                 return View(employee);
             }
             catch (Exception ex)
@@ -87,6 +97,8 @@ namespace LeaveManagement.Controllers
             }
             catch (Exception ex)
             {
+                var departments = await _departmentService.GetAllDepartmentsAsync();
+                ViewBag.Departments = new SelectList(departments, "Name", "Name", employee.Department);
                 ViewBag.Error = ex.Message;
                 return View(employee);
             }

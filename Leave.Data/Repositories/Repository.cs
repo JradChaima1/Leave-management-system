@@ -26,6 +26,7 @@ namespace Leave.Data.Repositories
 
         public async Task<T> AddAsync(T entity)
         {
+            _context.ChangeTracker.Clear();
             await _dbSet.AddAsync(entity);
             await _context.SaveChangesAsync();
             return entity;

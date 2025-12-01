@@ -75,7 +75,7 @@ namespace Leave.Services.Services
         public async Task<Dictionary<string, int>> GetLeaveUsageByDepartmentAsync()
         {
             var requests = await _leaveRequestRepository.GetAllAsync();
-            var approvedRequests = requests.Where(r => r.Status == "Approved");
+            var approvedRequests = requests.Where(r => r.Status == "Approved" && r.Employee != null);
             
             return approvedRequests.GroupBy(r => r.Employee.Department)
                                   .ToDictionary(g => g.Key ?? "Unknown", g => g.Count());
@@ -84,7 +84,8 @@ namespace Leave.Services.Services
         public async Task<Dictionary<string, int>> GetLeaveTypeDistributionAsync()
         {
             var requests = await _leaveRequestRepository.GetAllAsync();
-            return requests.GroupBy(r => r.LeaveType.Name)
+            return requests.Where(r => r.LeaveType != null)
+                          .GroupBy(r => r.LeaveType.Name)
                           .ToDictionary(g => g.Key, g => g.Count());
         }
     }

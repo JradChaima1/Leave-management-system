@@ -36,6 +36,11 @@ namespace LeaveManagement.Controllers
                 HttpContext.Session.SetInt32("RoleId", user.RoleId);
                 HttpContext.Session.SetInt32("EmployeeId", user.EmployeeId ?? 0);
 
+                if (user.RoleId == 3)
+                {
+                    return RedirectToAction("Index", "Profile");
+                }
+
                 return RedirectToAction("Index", "Dashboard");
             }
             catch (Exception ex)

@@ -97,15 +97,63 @@ namespace Leave.Data
             }
             context.LeaveBalances.AddRange(leaveBalances);
             context.SaveChanges();
-        }
 
-        private static string HashPassword(string password)
-        {
-            using (var sha256 = SHA256.Create())
+            var leaveRequests = new List<LeaveRequest>
             {
-                var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
-                return Convert.ToBase64String(hashedBytes);
+                new LeaveRequest { EmployeeId = 3, LeaveTypeId = 1, StartDate = new DateTime(2025, 11, 10), EndDate = new DateTime(2025, 11, 15), TotalDays = 5, Reason = "Family vacation", Status = "Approved", RequestDate = new DateTime(2025, 10, 20), ApprovedBy = 2, ApprovalDate = new DateTime(2025, 10, 21) },
+                new LeaveRequest { EmployeeId = 3, LeaveTypeId = 2, StartDate = new DateTime(2025, 10, 5), EndDate = new DateTime(2025, 10, 6), TotalDays = 2, Reason = "Medical checkup", Status = "Approved", RequestDate = new DateTime(2025, 10, 1), ApprovedBy = 2, ApprovalDate = new DateTime(2025, 10, 2) },
+                new LeaveRequest { EmployeeId = 5, LeaveTypeId = 1, StartDate = new DateTime(2025, 12, 20), EndDate = new DateTime(2025, 12, 30), TotalDays = 8, Reason = "Year-end holiday", Status = "Pending", RequestDate = DateTime.Now },
+                new LeaveRequest { EmployeeId = 4, LeaveTypeId = 1, StartDate = new DateTime(2025, 11, 1), EndDate = new DateTime(2025, 11, 5), TotalDays = 4, Reason = "Personal leave", Status = "Approved", RequestDate = new DateTime(2025, 10, 15), ApprovedBy = 1, ApprovalDate = new DateTime(2025, 10, 16) },
+                new LeaveRequest { EmployeeId = 5, LeaveTypeId = 2, StartDate = new DateTime(2025, 10, 10), EndDate = new DateTime(2025, 10, 11), TotalDays = 2, Reason = "Flu", Status = "Rejected", RequestDate = new DateTime(2025, 10, 8), ApprovedBy = 1, ApprovalDate = new DateTime(2025, 10, 9), RejectionReason = "Insufficient documentation" },
+                new LeaveRequest { EmployeeId = 3, LeaveTypeId = 5, StartDate = new DateTime(2025, 9, 15), EndDate = new DateTime(2025, 9, 15), TotalDays = 1, Reason = "Family emergency", Status = "Approved", RequestDate = new DateTime(2025, 9, 15), ApprovedBy = 2, ApprovalDate = new DateTime(2025, 9, 15) },
+                new LeaveRequest { EmployeeId = 4, LeaveTypeId = 2, StartDate = new DateTime(2025, 12, 5), EndDate = new DateTime(2025, 12, 7), TotalDays = 3, Reason = "Doctor appointment", Status = "Pending", RequestDate = DateTime.Now },
+                new LeaveRequest { EmployeeId = 5, LeaveTypeId = 1, StartDate = new DateTime(2025, 8, 10), EndDate = new DateTime(2025, 8, 20), TotalDays = 8, Reason = "Summer vacation", Status = "Approved", RequestDate = new DateTime(2025, 7, 15), ApprovedBy = 1, ApprovalDate = new DateTime(2025, 7, 16) },
+                new LeaveRequest { EmployeeId = 3, LeaveTypeId = 1, StartDate = new DateTime(2025, 7, 1), EndDate = new DateTime(2025, 7, 5), TotalDays = 4, Reason = "Wedding anniversary", Status = "Approved", RequestDate = new DateTime(2025, 6, 10), ApprovedBy = 2, ApprovalDate = new DateTime(2025, 6, 11) },
+                new LeaveRequest { EmployeeId = 4, LeaveTypeId = 4, StartDate = new DateTime(2025, 12, 15), EndDate = new DateTime(2025, 12, 20), TotalDays = 5, Reason = "Personal matters", Status = "Pending", RequestDate = DateTime.Now }
+            };
+            context.LeaveRequests.AddRange(leaveRequests);
+            context.SaveChanges();
+
+            var balancesToUpdate = context.LeaveBalances.Where(b => 
+                (b.EmployeeId == 3 && (b.LeaveTypeId == 1 || b.LeaveTypeId == 2 || b.LeaveTypeId == 5)) ||
+                (b.EmployeeId == 4 && b.LeaveTypeId == 1) ||
+                (b.EmployeeId == 5 && b.LeaveTypeId == 1)).ToList();
+
+            foreach (var balance in balancesToUpdate)
+            {
+                if (balance.EmployeeId == 3 && balance.LeaveTypeId == 1)
+                {
+                    balance.UsedDays = 9;
+                    balance.RemainingDays = 11;
+                }
+                else if (balance.EmployeeId == 3 && balance.LeaveTypeId == 2)
+                {
+                    balance.UsedDays = 2;
+                    balance.RemainingDays = 8;
+                }
+                else if (balance.EmployeeId == 3 && balance.LeaveTypeId == 5)
+                {
+                    balance.UsedDays = 1;
+                    balance.RemainingDays = 2;
+                }
+                else if (balance.EmployeeId == 4 && balance.LeaveTypeId == 1)
+                {
+                    balance.UsedDays = 4;
+                    balance.RemainingDays = 16;
+                }
+                else if (balance.EmployeeId == 5 && balance.LeaveTypeId == 1)
+                {
+                    balance.UsedDays = 8;
+                    balance.RemainingDays = 12;
+                }
             }
+            context.SaveChanges();
         }
+private static string HashPassword(string password)
+{
+    return BCrypt.Net.BCrypt.HashPassword(password);
+}
+
+      
     }
 }

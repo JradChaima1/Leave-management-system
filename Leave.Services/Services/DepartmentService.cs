@@ -1,5 +1,6 @@
 using Leave.Core.Models;
 using Leave.Core.Interfaces;
+using Leave.Core.Exceptions;
 
 namespace Leave.Services.Services
 {
@@ -21,14 +22,14 @@ namespace Leave.Services.Services
         {
             var department = await _departmentRepository.GetByIdAsync(id);
             if (department == null)
-                throw new Exception($"Department with ID {id} not found");
+                throw new NotFoundException($"Department with ID {id} not found");
             return department;
         }
 
         public async Task<Department> CreateDepartmentAsync(Department department)
         {
             if (string.IsNullOrEmpty(department.Name))
-                throw new Exception("Department name is required");
+                throw new ValidationException("Department name is required");
 
             return await _departmentRepository.AddAsync(department);
         }
@@ -37,16 +38,20 @@ namespace Leave.Services.Services
         {
             var existing = await _departmentRepository.GetByIdAsync(department.DepartmentId);
             if (existing == null)
-                throw new Exception($"Department with ID {department.DepartmentId} not found");
+                throw new NotFoundException($"Department with ID {department.DepartmentId} not found");
 
-            await _departmentRepository.UpdateAsync(department);
+            existing.Name = department.Name;
+            existing.Description = department.Description;
+            existing.ManagerId = department.ManagerId;
+
+            await _departmentRepository.UpdateAsync(existing);
         }
 
         public async Task DeleteDepartmentAsync(int id)
         {
             var department = await _departmentRepository.GetByIdAsync(id);
             if (department == null)
-                throw new Exception($"Department with ID {id} not found");
+                throw new NotFoundException($"Department with ID {id} not found");
 
             await _departmentRepository.DeleteAsync(id);
         }

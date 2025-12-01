@@ -51,9 +51,9 @@
                                 <a asp-action="Edit" asp-route-id="@employee.EmployeeId" class="btn btn-sm btn-warning">
                                     <i class="bi bi-pencil"></i>
                                 </a>
-                                <a asp-action="Delete" asp-route-id="@employee.EmployeeId" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">
+                                <button type="button" class="btn btn-sm btn-danger" onclick="showDeleteModal(@employee.EmployeeId, '@employee.FirstName @employee.LastName')">
                                     <i class="bi bi-trash"></i>
-                                </a>
+                                </button>
                             </td>
                         </tr>
                     }
@@ -62,3 +62,31 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete <strong id="employeeName"></strong>?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <a id="confirmDelete" href="#" class="btn btn-danger">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function showDeleteModal(id, name) {
+            document.getElementById('employeeName').textContent = name;
+            document.getElementById('confirmDelete').href = '/Employees/Delete/' + id;
+            new bootstrap.Modal(document.getElementById('deleteModal')).show();
+        }
+    </script>
+}

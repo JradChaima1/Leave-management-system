@@ -4,7 +4,7 @@ using LeaveManagement.Filters;
 
 namespace LeaveManagement.Controllers
 {
-    [AuthorizeSession]
+    [AuthorizeSession("Admin", "Manager")]
     public class DashboardController : Controller
     {
         private readonly IAnalyticsService _analyticsService;

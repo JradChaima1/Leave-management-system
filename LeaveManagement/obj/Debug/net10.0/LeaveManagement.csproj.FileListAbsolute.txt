@@ -284,3 +284,13 @@ C:\Users\hp\Documents\Projects\Leave Management system\LeaveManagement\obj\Debug
 C:\Users\hp\Documents\Projects\Leave Management system\LeaveManagement\obj\Debug\net10.0\LeaveManagement.genruntimeconfig.cache
 C:\Users\hp\Documents\Projects\Leave Management system\LeaveManagement\obj\Debug\net10.0\ref\LeaveManagement.dll
 C:\Users\hp\Documents\Projects\Leave Management system\LeaveManagement\obj\Debug\net10.0\compressed\i8n484k3as-{0}-o5rzrwtmi5-o5rzrwtmi5.gz
+C:\Users\hp\Documents\Projects\Leave Management system\LeaveManagement\bin\Debug\net10.0\BCrypt.Net-Next.dll
+C:\Users\hp\Documents\Projects\Leave Management system\LeaveManagement\bin\Debug\net10.0\Serilog.dll
+C:\Users\hp\Documents\Projects\Leave Management system\LeaveManagement\bin\Debug\net10.0\Serilog.AspNetCore.dll
+C:\Users\hp\Documents\Projects\Leave Management system\LeaveManagement\bin\Debug\net10.0\Serilog.Extensions.Hosting.dll
+C:\Users\hp\Documents\Projects\Leave Management system\LeaveManagement\bin\Debug\net10.0\Serilog.Extensions.Logging.dll
+C:\Users\hp\Documents\Projects\Leave Management system\LeaveManagement\bin\Debug\net10.0\Serilog.Formatting.Compact.dll
+C:\Users\hp\Documents\Projects\Leave Management system\LeaveManagement\bin\Debug\net10.0\Serilog.Settings.Configuration.dll
+C:\Users\hp\Documents\Projects\Leave Management system\LeaveManagement\bin\Debug\net10.0\Serilog.Sinks.Console.dll
+C:\Users\hp\Documents\Projects\Leave Management system\LeaveManagement\bin\Debug\net10.0\Serilog.Sinks.Debug.dll
+C:\Users\hp\Documents\Projects\Leave Management system\LeaveManagement\bin\Debug\net10.0\Serilog.Sinks.File.dll

@@ -72,8 +72,8 @@ namespace Leave.Data
                 entity.Property(lr => lr.Reason).HasMaxLength(1000);
                 entity.Property(lr => lr.Status).IsRequired().HasMaxLength(50);
                 entity.Property(lr => lr.TotalDays).HasPrecision(5, 2);
-                entity.Property(lr => lr.RejectionReason).HasMaxLength(500);
-                entity.Property(lr => lr.AttachmentPath).HasMaxLength(500);
+                entity.Property(lr => lr.RejectionReason).HasMaxLength(500).IsRequired(false);
+                entity.Property(lr => lr.AttachmentPath).HasMaxLength(500).IsRequired(false);
 
                 entity.HasOne(lr => lr.Employee)
                     .WithMany(e => e.LeaveRequests)

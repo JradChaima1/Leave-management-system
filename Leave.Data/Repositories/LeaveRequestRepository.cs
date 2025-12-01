@@ -13,6 +13,7 @@ namespace Leave.Data.Repositories
         public async Task<IEnumerable<LeaveRequest>> GetRequestsByEmployeeAsync(int employeeId)
         {
             return await _dbSet
+                .AsNoTracking()
                 .Include(lr => lr.LeaveType)
                 .Include(lr => lr.Approver)
                 .Where(lr => lr.EmployeeId == employeeId)
@@ -23,6 +24,7 @@ namespace Leave.Data.Repositories
         public async Task<IEnumerable<LeaveRequest>> GetPendingRequestsByManagerAsync(int managerId)
         {
             return await _dbSet
+                .AsNoTracking()
                 .Include(lr => lr.Employee)
                 .Include(lr => lr.LeaveType)
                 .Where(lr => lr.Employee.ManagerId == managerId && lr.Status == "Pending")
@@ -33,6 +35,7 @@ namespace Leave.Data.Repositories
         public async Task<IEnumerable<LeaveRequest>> GetRequestsByStatusAsync(string status)
         {
             return await _dbSet
+                .AsNoTracking()
                 .Include(lr => lr.Employee)
                 .Include(lr => lr.LeaveType)
                 .Where(lr => lr.Status == status)
@@ -43,6 +46,7 @@ namespace Leave.Data.Repositories
         public async Task<IEnumerable<LeaveRequest>> GetRequestsByDateRangeAsync(DateTime startDate, DateTime endDate)
         {
             return await _dbSet
+                .AsNoTracking()
                 .Include(lr => lr.Employee)
                 .Include(lr => lr.LeaveType)
                 .Where(lr => lr.StartDate >= startDate && lr.EndDate <= endDate)

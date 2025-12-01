@@ -1,5 +1,6 @@
 using Leave.Core.Models;
 using Leave.Core.Interfaces;
+using Leave.Core.Exceptions;
 
 namespace Leave.Services.Services
 {
@@ -21,14 +22,14 @@ namespace Leave.Services.Services
         {
             var holiday = await _holidayRepository.GetByIdAsync(id);
             if (holiday == null)
-                throw new Exception($"Holiday with ID {id} not found");
+                throw new NotFoundException($"Holiday with ID {id} not found");
             return holiday;
         }
 
         public async Task<Holiday> CreateHolidayAsync(Holiday holiday)
         {
             if (string.IsNullOrEmpty(holiday.Name))
-                throw new Exception("Holiday name is required");
+                throw new ValidationException("Holiday name is required");
 
             return await _holidayRepository.AddAsync(holiday);
         }
@@ -37,16 +38,21 @@ namespace Leave.Services.Services
         {
             var existing = await _holidayRepository.GetByIdAsync(holiday.HolidayId);
             if (existing == null)
-                throw new Exception($"Holiday with ID {holiday.HolidayId} not found");
+                throw new NotFoundException($"Holiday with ID {holiday.HolidayId} not found");
 
-            await _holidayRepository.UpdateAsync(holiday);
+            existing.Name = holiday.Name;
+            existing.Date = holiday.Date;
+            existing.IsRecurring = holiday.IsRecurring;
+            existing.Description = holiday.Description;
+
+            await _holidayRepository.UpdateAsync(existing);
         }
 
         public async Task DeleteHolidayAsync(int id)
         {
             var holiday = await _holidayRepository.GetByIdAsync(id);
             if (holiday == null)
-                throw new Exception($"Holiday with ID {id} not found");
+                throw new NotFoundException($"Holiday with ID {id} not found");
 
             await _holidayRepository.DeleteAsync(id);
         }

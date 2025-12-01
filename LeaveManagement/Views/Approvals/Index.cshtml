@@ -47,7 +47,7 @@
                                 <td>@request.RequestDate.ToString("MMM dd, yyyy")</td>
                                 <td>
                                     <button type="button" class="btn btn-sm btn-success" 
-                                            onclick="approveRequest(@request.LeaveRequestId)">
+                                            onclick="showApproveModal(@request.LeaveRequestId)">
                                         <i class="bi bi-check"></i> Approve
                                     </button>
                                     <button type="button" class="btn btn-sm btn-danger" 
@@ -61,6 +61,25 @@
                 </table>
             </div>
         }
+    </div>
+</div>
+
+<div class="modal fade" id="approveModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Approve Leave Request</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="approveRequestId" />
+                <p>Are you sure you want to approve this leave request?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success" onclick="approveRequest()">Approve</button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -90,21 +109,25 @@
 
 @section Scripts {
     <script>
-        function approveRequest(id) {
-            if (confirm('Approve this leave request?')) {
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = '@Url.Action("Approve", "Approvals")';
-                
-                const input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = 'id';
-                input.value = id;
-                
-                form.appendChild(input);
-                document.body.appendChild(form);
-                form.submit();
-            }
+        function showApproveModal(id) {
+            document.getElementById('approveRequestId').value = id;
+            new bootstrap.Modal(document.getElementById('approveModal')).show();
+        }
+
+        function approveRequest() {
+            const id = document.getElementById('approveRequestId').value;
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '@Url.Action("Approve", "Approvals")';
+            
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'id';
+            input.value = id;
+            
+            form.appendChild(input);
+            document.body.appendChild(form);
+            form.submit();
         }
 
         function showRejectModal(id) {
