@@ -13350,3 +13350,11 @@ ORDER BY [l].[RequestDate] DESC
 2025-12-01 02:13:27.144 +00:00 [INF] Executed action LeaveManagement.Controllers.AccountController.Login (LeaveManagement) in 3.7468ms
 2025-12-01 02:13:27.146 +00:00 [INF] Executed endpoint 'LeaveManagement.Controllers.AccountController.Login (LeaveManagement)'
 2025-12-01 02:13:27.148 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:5200/ - 200 null text/html; charset=utf-8 15.8605ms
+2025-12-01 03:13:09.555 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:5200/ - null null
+2025-12-01 03:13:09.745 +00:00 [INF] Executing endpoint 'LeaveManagement.Controllers.AccountController.Login (LeaveManagement)'
+2025-12-01 03:13:09.776 +00:00 [INF] Route matched with {action = "Login", controller = "Account"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Login() on controller LeaveManagement.Controllers.AccountController (LeaveManagement).
+2025-12-01 03:13:09.987 +00:00 [INF] Executing ViewResult, running view Login.
+2025-12-01 03:13:10.037 +00:00 [INF] Executed ViewResult - view Login executed in 103.4732ms.
+2025-12-01 03:13:10.044 +00:00 [INF] Executed action LeaveManagement.Controllers.AccountController.Login (LeaveManagement) in 262.5177ms
+2025-12-01 03:13:10.047 +00:00 [INF] Executed endpoint 'LeaveManagement.Controllers.AccountController.Login (LeaveManagement)'
+2025-12-01 03:13:10.053 +00:00 [INF] Request finished HTTP/1.1 GET http://localhost:5200/ - 200 null text/html; charset=utf-8 505.4431ms
